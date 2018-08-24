@@ -1,18 +1,19 @@
 const express      = require('express');
-const path         = require('path');
 const cookieParser = require('cookie-parser');
-const cors         = require('cors');
+const db           = require('./db');
 
 const app = express();
 
-app.options('*', cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+db.sequelize.sync()
+  .then(() => {
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: false }));
+    app.use(cookieParser());
+    app.use(express.static('public'));
 
-require('./sockets');
+    require('./sockets');
 
-app.use('/auth', require('./routes/auth'));
+    app.use('/auth', require('./routes/auth'));
+  });
 
 module.exports = app;
