@@ -1,6 +1,7 @@
-const express      = require('express');
-const cookieParser = require('cookie-parser');
-const db           = require('./db');
+const express        = require('express');
+const cookieParser   = require('cookie-parser');
+const db             = require('./db');
+const authMiddleware = require('./middleware/auth');
 
 const app = express();
 
@@ -11,9 +12,11 @@ db.sequelize.sync()
     app.use(cookieParser());
     app.use(express.static('public'));
 
-    require('./sockets');
-
     app.use('/auth', require('./routes/auth'));
+
+    app.use(authMiddleware);
+
+    require('./sockets');
   });
 
 module.exports = app;
