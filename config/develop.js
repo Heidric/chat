@@ -3,6 +3,7 @@ module.exports = {
     dbName:   'chat',
     login:    'root',
     password: '0000',
-    host:     'localhost:3306'
-  }
+    host:     'localhost'
+  },
+  secret: 'supersecret'
 };
