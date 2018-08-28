@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
+const jwt    = require('jsonwebtoken');
 const config = require('../config');
 
 module.exports = (req, res, next) => {
-  if (req.headers && req.headers.authorization && req.headers.autorization.split(' ')[ 0 ] === 'JWT') {
-    return jwt.verify(req.headers.autorization.split(' ')[ 1 ], config.secret, (err, result) => {
+  if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[ 0 ] === 'JWT') {
+    return jwt.verify(req.headers.authorization.split(' ')[ 1 ], config.secret, (err, result) => {
       if (err) {
         return res.status(401).json({ message: 'Требуется авторизация' });
       }

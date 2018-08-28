@@ -19,7 +19,9 @@ const db         = new Sequelize(config.database.dbName, config.database.login, 
 });
 
 const models = new Map([
-  [ 'User', 'user' ],
+  [ 'User',        'user' ],
+  [ 'ChatLog',     'chatLog' ],
+  [ 'BannedUsers', 'bannedUsers' ],
 ]);
 
 const modelExports = {};

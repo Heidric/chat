@@ -16,6 +16,8 @@ db.sequelize.sync()
 
     app.use(authMiddleware);
 
+    app.use('/chat-data/', require('./routes/chat'));
+
     require('./sockets');
   });
 
