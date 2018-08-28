@@ -16,9 +16,9 @@ io.use(function(socket, next){
     next(new Error('Требуется авторизация'));
   }
 }).on('connection', function (socket) {
+  const nickname = socket.user.nickname;
+  const socketId = socket.id;
   socket.on('join', async (channel) => {
-    const nickname = socket.user.nickname;
-
     if (!channel) {
       return socket.disconnect();
     }
@@ -38,8 +38,8 @@ io.use(function(socket, next){
 
     io.to(channel).emit('message', `${nickname} joined ${channel}`);
 
-    client.set(socket.id, nickname);
-    return client.set(nickname, socket.id);
+    client.set(socketId, nickname);
+    return client.set(nickname, socketId);
   });
 
   socket.on('send message', async (data) => {
@@ -53,6 +53,11 @@ io.use(function(socket, next){
       message:  data.message
     });
     io.to(data.channel).emit('message', data.message);
+  });
+
+  socket.on('disconnect', () => {
+    client.del(socketId);
+    client.del(nickname);
   });
 });
 
