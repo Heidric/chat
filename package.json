@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "bcrypt": "^3.0.0",
+    "bluebird": "^3.5.1",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
     "debug": "~2.6.9",
@@ -14,6 +15,7 @@
     "jsonwebtoken": "^8.3.0",
     "morgan": "~1.9.0",
     "mysql2": "^1.6.1",
+    "redis": "^2.8.0",
     "sequelize": "^4.38.0",
     "socket.io": "^2.1.1"
   }
