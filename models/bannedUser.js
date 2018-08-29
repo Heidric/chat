@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
-  return sequelize.define('bannedUsers', {
+  return sequelize.define('bannedUser', {
     nickname:  {
       type:      Sequelize.DataTypes.STRING,
       allowNull: false

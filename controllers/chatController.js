@@ -42,7 +42,7 @@ async function getUsersInChannel(req, res, next) {
 }
 
 function banUser(req, res, next) {
-  return db.BannedUsers.create({
+  return db.BannedUser.create({
     nickname: req.params.nickname,
     channel:  req.params.channel
   })
