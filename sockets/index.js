@@ -1,12 +1,13 @@
-const io     = require('socket.io').listen(8563);
-const redis  = require('redis');
-const db     = require('../db');
-const client = redis.createClient();
-const jwt    = require('jsonwebtoken');
-const config = require('../config');
+const io            = require('socket.io').listen(8563);
+const redis         = require('redis');
+const db            = require('../db');
+const client        = redis.createClient();
+const jwt           = require('jsonwebtoken');
+const config        = require('../config');
+const filteredWords = require('../app').filteredWords;
 
-io.use(function(socket, next){
-  if (socket.handshake.query && socket.handshake.query.token){
+io.use(function(socket, next) {
+  if (socket.handshake.query && socket.handshake.query.token) {
     jwt.verify(socket.handshake.query.token, config.secret, function(err, result) {
       if(err) return next(new Error('Требуется авторизация'));
       socket.user = result;
@@ -23,7 +24,7 @@ io.use(function(socket, next){
       return socket.disconnect();
     }
 
-    const banned = await db.BannedUsers.count({
+    const banned = await db.BannedUser.count({
       where: {
         nickname,
         channel
@@ -47,12 +48,18 @@ io.use(function(socket, next){
       return io.to(`${socket.id}`).emit('error', 'Чтобы написать в канал, зайдите в него');
     }
 
+    const expStr = filteredWords.join('|');
+
+    const filteredMessage = data.message.replace(new RegExp('\\b(' + expStr + ')\\b', 'gi'), '*');
+
     await db.ChatLog.create({
-      nickname: socket.user.nickname,
-      channel:  data.channel,
-      message:  data.message
+      nickname:    socket.user.nickname,
+      channel:     data.channel,
+      message:     filteredMessage,
+      raw_message: data.message
     });
-    io.to(data.channel).emit('message', data.message);
+
+    io.to(data.channel).emit('message', filteredMessage);
   });
 
   socket.on('disconnect', () => {

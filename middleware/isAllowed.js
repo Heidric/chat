@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
     return res.status(401).json({ message: 'Требуется авторизация' });
   }
 
-  return db.BannedUsers.count({
+  return db.BannedUser.count({
     where: {
       nickname: req.user.nickname,
       channel:  req.params.channel || req.body.channel
