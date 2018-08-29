@@ -48,9 +48,13 @@ io.use(function(socket, next) {
       return io.to(`${socket.id}`).emit('error', 'Чтобы написать в канал, зайдите в него');
     }
 
-    const expStr = filteredWords.join('|');
+    let filteredMessage = data.message;
 
-    const filteredMessage = data.message.replace(new RegExp('\\b(' + expStr + ')\\b', 'gi'), '*');
+    if (filteredWords.length > 0) {
+      const expStr = filteredWords.join('|');
+
+      filteredMessage = data.message.replace(new RegExp('\\b(' + expStr + ')\\b', 'gi'), '*');
+    }
 
     await db.ChatLog.create({
       nickname:    socket.user.nickname,
